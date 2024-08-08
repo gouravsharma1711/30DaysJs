@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body style="color: white;background-color: #212121;">
+    <form id="userForm">
+        <label for="username">Name:</label>
+        <input type="text" id="username" name="username" required>
+        <br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <br>
+        <button type="submit" id="submitButton">Submit</button>
+    </form>
+
+    <div class="display">
+        <!-- Display saved data here -->
+    </div>
+    <h2>Add the data in local storage :- </h2>
+
+    <div>
+        <label for="key">Enter the key : </label>
+        <input type="text" id="key">
+        <br>
+        <label for="value">Enter the Value : </label>
+        <input type="text" id="value">
+        <br>
+        <button id="AddButton">Add</button>
+    </div>
+    <h2>Delete the data from local storage :- </h2>
+    <div>
+        <label for="DeleteFromLocalStorage">Enter the key which do you want to remove from loacal Storage :-</label>
+        <input type="text" id="DeleteFromLocalStorage">
+        <br>
+        <button id="DeleteButton">Delete</button>
+    </div>
+</body>
+<script >
+    // Day 20: LocalStorage and SessionStorage
+// Tasks/Activities:
+// Activity 1: Understanding LocalStorage
+// Task 1: Write a script to save a string value to localstorage and retrieve it. Log the retrieved value.
+
+let key="Name";
+let value="Gourav Sharma";
+localStorage.setItem(key,value);
+console.log(`The key is '${key}' and the value is '${localStorage.getItem(key)}'`);
+
+
+// Task 2: Write a script to save an object to localStorage by converting it to a JSON string. Retrieve and parse the object, then log it.
+let myObj={
+    name:"Gourav Sharma",
+    location:"Delhi",
+    course:"Btech",
+    branch:"Computer Science and Engineering"
+}
+localStorage.setItem("Object",JSON.stringify(myObj));
+let myPromise=new Promise((resolve,reject)=>{
+    setTimeout(()=>{
+        let obj=JSON.parse(localStorage.getItem("Object"));
+        resolve(obj);
+    },2000);
+}).then((result)=>{
+    console.log(result);  
+})
+
+// Activity 2: Using LocalStorage
+// Task 3: Create a simple form that saves user input (e.g., name and email) to localstorage when submitted. Retrieve and display the saved data on page load.
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('userForm');
+    const display = document.querySelector('.display');
+
+    // Function to retrieve and display saved data
+    function displaySavedData() {
+        const savedData = JSON.parse(localStorage.getItem('UserData'));
+        if (savedData) {
+            const { UserName, Email } = savedData;
+            const newTextNode = document.createTextNode(`Name: ${UserName}, Email: ${Email}`);
+            display.appendChild(newTextNode);
+        }
+    }
+
+    // Display saved data on page load
+    displaySavedData();
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const userName = document.querySelector('#username').value;
+        const email = document.querySelector('#email').value;
+
+        // Save user data to localStorage
+        const myObject = {
+            UserName: userName,
+            Email: email
+        };
+        localStorage.setItem('UserData', JSON.stringify(myObject));
+
+        // Clear the form fields
+        form.reset();
+
+        // Optionally, update the display with the new data
+        display.innerHTML = ''; // Clear previous display
+        displaySavedData();
+    });
+});
+
+// Task 4: Write a script to remove an item from localStorage. Log the localStorage content before and after removal.
+
+    
+    document.getElementById("AddButton").addEventListener('click',()=>{
+        let key2=document.getElementById("key").value;
+        let value2=document.getElementById("value").value;
+    localStorage.setItem(key2,value2);
+    })
+    document.getElementById("DeleteButton").addEventListener('click',()=>{
+        let SelectedKey=document.getElementById("DeleteFromLocalStorage").value;
+    localStorage.removeItem(SelectedKey);
+    })
+
+
+</script>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body style="background-color: #212121; color:white">
+    <form id="userForm">
+        <label for="username">Name:</label>
+        <input type="text" id="username" name="username" required>
+        <br>
+        <br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <br>
+        <br>
+        <button type="submit" id="submitButton">Submit</button>
+    </form>
+
+    <div class="display">
+        <!-- Display saved data here -->
+    </div>
+    <br>
+    <br>
+    <label for="remove">If you want to remove item from the session Storage : </label>
+    <button name="remove" class="remove">Remove</button>
+</body>
+<script >
+    // Activity 3: Understanding SessionStorage
+// Task 5: Write a script to save a string value to sessionStorage and retrieve it. Log the retrieved value. 
+let key="UserName";
+let Value="Gourav Sharma";
+sessionStorage.setItem(key,Value);
+console.log(`The key is '${key}' and the value is '${sessionStorage.getItem(key)}'`);
+
+//Task 6: Write a script to save an object to sessionStorage by converting it to a JSON string. Retrieve and parse the object, then log it.
+let myObject={
+    UserLocation:"Delhi",
+    UserEmail:"User1@gmail.com",
+    UserLogIn:true
+}
+sessionStorage.setItem("UserData",JSON.stringify(myObject));
+let myPromise=new Promise((resolve,reject)=>{
+    let error=false;
+    
+    if(!error){
+            let data=sessionStorage.getItem("UserData");
+            resolve(JSON.parse(data));
+    }else{
+            reject(new Error("Network Issue"));
+    }
+    
+});
+
+myPromise.then((data)=>{
+    console.log("Data Returned : ",data);
+    
+})
+.catch((error)=>{
+    console.log("Error : ",error.message);
+    
+})
+// Activity 4: Using SessionStorage
+// Task 7: Create a simple form that saves user input (e.g., name and email) to sessionStorage when submitted. Retrieve and display the saved data on page load.
+document.addEventListener('DOMContentLoaded',()=>{
+    const form=document.querySelector("form");
+    const display = document.querySelector('.display');
+
+    const DisplaySavedData=()=>{
+        const Data = JSON.parse(sessionStorage.getItem('UserInformation'));
+        if(Data){
+        
+            let newNode=document.createTextNode(`UserName: ${Data.UserName} , Email: ${Data.UserEmail}`);
+            display.appendChild(newNode);
+        }
+
+    }
+    DisplaySavedData();
+    const submitButton=document.querySelector("#submitButton");
+    submitButton.addEventListener('click',(e)=>{
+        e.preventDefault();
+        const Name=document.getElementById('username').value;
+        const email=document.querySelector('#email').value;
+        let Obj={
+            UserName:Name,
+            UserEmail:email
+        }
+        sessionStorage.setItem("UserInformation",JSON.stringify(Obj));
+        form.reset();
+        display.innerHTML = ''; 
+        DisplaySavedData();
+        
+    })  
+})
+// Task 8: Write a script to remove an item from sessionstorage, Log the sessionstorage content before and after removal.
+let RemoveButton = document.querySelector(".remove");
+RemoveButton.addEventListener('click', () => {
+    let removeItem = prompt("Enter the key to remove from sessionStorage:");
+    if (removeItem) {
+        console.log(`Before Removal: ${sessionStorage.getItem(removeItem)}`);
+        sessionStorage.removeItem(removeItem);
+        console.log(`After Removal: ${sessionStorage.getItem(removeItem)}`);
+    } else {
+        console.log("No key entered. No action taken.");
+    }
+});
+
+// Activity 5: Comparing LocalStorage and SessionStorage
+// Task 9: Write a function that accepts a key and a value, and saves the value to both localStorage and sessionstorage. Retrieve and log the values from both storage mechanisms 
+const add=(key,value)=>{
+    if(typeof key=== 'string' && typeof value==="string"){
+        localStorage.setItem(key,value);
+        sessionStorage.setItem(key,value);
+        console.log(`data From local Storage ==> ${key}(key) : ${localStorage.getItem(key)}(value) `);
+        console.log(`data From Session Storage ==> ${key}(key) : ${sessionStorage.getItem(key)}(value) `);
+        
+    }
+}
+add("MyName","Gourav");
+//Task 10: Write a function that clears all data from both Localstorage and sessionstorage, Verify that both storages are empty.
+const clearAllData=()=>{
+    sessionStorage.clear();
+    localStorage.clear();
+}
+// clearAllData();
+const verify=()=>{
+    return sessionStorage.length===0 && localStorage.length===0;
+}
+console.log(`Both session and local storage is cleared ??? : ${verify()}`);
+
+</script>
+</html>
